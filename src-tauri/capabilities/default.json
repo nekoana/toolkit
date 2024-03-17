@@ -11,6 +11,10 @@
     "app:default",
     "resources:default",
     "menu:default",
-    "tray:default"
+    "tray:default",
+    "window:allow-start-dragging",
+    "window:allow-center",
+    "window:allow-close",
+    "window:allow-hide"
   ]
 }

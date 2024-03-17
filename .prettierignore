@@ -1,0 +1,8 @@
+.next
+package-lock.json
+npm-lock.yaml
+build
+coverage
+src-tauri
+node_modules
+

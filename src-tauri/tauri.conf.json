@@ -1,5 +1,6 @@
 {
   "app": {
+    "macOSPrivateApi": true,
     "security": {
       "csp": null
     },
@@ -7,9 +8,14 @@
       {
         "fullscreen": false,
         "height": 600,
+        "minHeight": 600,
         "resizable": true,
         "title": "toolkit",
-        "width": 800
+        "decorations": false,
+        "transparent": true,
+        "shadow": true,
+        "width": 800,
+        "minWidth": 800
       }
     ]
   },
@@ -24,13 +30,13 @@
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
-      "icons/128x128@2x.png",
+      "icons/256x256.png",
       "icons/icon.icns",
       "icons/icon.ico"
     ],
     "targets": "all"
   },
-  "identifier": "com.tauri.dev",
+  "identifier": "com.kouqurong.toolkit",
   "productName": "toolkit",
   "version": "0.1.0"
 }
