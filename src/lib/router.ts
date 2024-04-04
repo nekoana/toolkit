@@ -1,4 +1,6 @@
-const router: Array<Menu> = [
+import { Router } from "@/app/menus";
+
+const router: Router[] = [
   {
     title: "Bitset",
     icon: "/bitset.svg",
@@ -19,25 +21,21 @@ const router: Array<Menu> = [
     icon: "/bitset.svg",
     path: "/bitset",
   },
-  ,
   {
     title: "Bitset",
     icon: "/bitset.svg",
     path: "/bitset",
   },
-  ,
   {
     title: "Bitset",
     icon: "/bitset.svg",
     path: "/bitset",
   },
-  ,
   {
     title: "Bitset",
     icon: "/bitset.svg",
     path: "/bitset",
   },
-  ,
   {
     title: "Bitset",
     icon: "/bitset.svg",

@@ -1,6 +1,7 @@
 import { MdRipple } from "@/wrapper/ripple";
 import styles from "./card.module.css";
 import clsx from "clsx";
+import React from "react";
 
 interface FilledCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;

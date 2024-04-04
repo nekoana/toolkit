@@ -16,7 +16,7 @@ export default function Bitset() {
     return () => clearTimeout(timeout);
   }, [content, format]);
   return (
-    <div className="flex flex-col justify-center content-center items-center">
+    <div className="container flex flex-col justify-center content-center items-center">
       <div className="w-full flex flex-row justify-center">
         <ContentInput value={content} onChange={setContent} />
       </div>

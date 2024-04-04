@@ -12,5 +12,5 @@ test("BitMapper.toBinary", () => {
 
   expect(BitMapper.toBinary("0")).toBe("00000000");
 
-    expect(BitMapper.toBinary("1")).toBe("00010000");
+  expect(BitMapper.toBinary("1")).toBe("00010000");
 });

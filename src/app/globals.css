@@ -65,3 +65,8 @@ body {
   overflow: hidden;
   @apply flex flex-col items-center;
 }
+
+/*nav {*/
+/*  background-color: var(--md-sys-color-surface-container);*/
+/*  @apply p-4 rounded-xl transition-shadow;*/
+/*}*/
