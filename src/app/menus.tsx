@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import FilledCard from "../components/card";
-import router from "../lib/router";
+import router from "./router";
 import clsx from "clsx"; // 导入router
 
 export type Router = {

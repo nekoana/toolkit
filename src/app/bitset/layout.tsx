@@ -5,10 +5,5 @@ export default function BitsetLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <>
-      <h1>Bitset</h1>
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }

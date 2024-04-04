@@ -1,4 +1,4 @@
-import BitMapper from "@/lib/bitset";
+import BitMapper from "@/app/bitset/lib/bitset";
 import { expect } from "@jest/globals";
 
 test("BitMapper.toBinary", () => {

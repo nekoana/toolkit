@@ -66,7 +66,7 @@ body {
   @apply flex flex-col items-center;
 }
 
-/*nav {*/
-/*  background-color: var(--md-sys-color-surface-container);*/
-/*  @apply p-4 rounded-xl transition-shadow;*/
-/*}*/
+md-outlined-select,
+md-filled-select {
+  min-width: unset;
+}
