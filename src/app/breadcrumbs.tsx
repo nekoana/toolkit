@@ -3,6 +3,8 @@ import { useSelectedLayoutSegments } from "next/navigation";
 import clsx from "clsx";
 import Image from "next/image";
 import React from "react";
+import { MdIcon } from "@/wrapper/icon";
+import { MdIconButton } from "@/wrapper/icon-button";
 
 export default function Breadcrumbs({
   className,
@@ -14,9 +16,13 @@ export default function Breadcrumbs({
   return (
     <nav className={clsx("ml-2", "flex", "flex-row", className)}>
       <ol className="list-none inline-flex">
-        <li className="rounded flex items-center relative px-6 py-0.5">
+        <li className="flex items-center">
           <Link href="/">
-            <Image src="/home.svg" alt="home" width={16} height={16} />
+            <MdIconButton>
+              <MdIcon>
+                <Image src="/home.svg" alt="home" width={16} height={16} />
+              </MdIcon>
+            </MdIconButton>
           </Link>
         </li>
         {segments.map((segment, index) => {
@@ -25,7 +31,7 @@ export default function Breadcrumbs({
           return (
             <React.Fragment key={index}>
               <Image
-                src="/back.svg"
+                src="/arrow-left.svg"
                 alt="back"
                 width={16}
                 height={16}

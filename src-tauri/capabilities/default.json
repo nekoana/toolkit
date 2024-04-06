@@ -15,6 +15,10 @@
     "window:allow-start-dragging",
     "window:allow-center",
     "window:allow-close",
-    "window:allow-hide"
+    "window:allow-hide",
+    "window:allow-minimize",
+    "window:allow-maximize",
+    "window:allow-is-fullscreen",
+    "window:allow-set-fullscreen"
   ]
 }
