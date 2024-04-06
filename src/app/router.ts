@@ -6,6 +6,11 @@ const router: Router[] = [
     icon: "/bitset.svg",
     path: "/bitset",
   },
+  {
+    title: "Bytes Analysis",
+    icon: "/bytes-analysis.svg",
+    path: "/bytes-analysis",
+  },
 ];
 
 export default router;
