@@ -12,7 +12,7 @@ const nextConfig = {
 
     config.plugins.push(
       new CopyWebpackPlugin({
-        patterns: [{ from: "node_modules/monaco-editor/min/vs", to: "public" }],
+        patterns: [{ from: "./node_modules/monaco-editor/min/vs", to: "../public/vs" }],
       }),
     );
 
