@@ -3,7 +3,7 @@
 import { MdOutlinedTextField } from "@/wrapper/text-field";
 import { useState } from "react";
 import { editor } from "monaco-editor";
-import Editor, { Monaco } from "@monaco-editor/react";
+import Editor, { Monaco, loader } from "@monaco-editor/react";
 import React from "react";
 import clsx from "clsx";
 import { MdFilledIconButton } from "@/wrapper/icon-button";
@@ -15,6 +15,8 @@ export default function BytesAnalysis() {
   const [hexContent, setHexContent] = useState<string>("");
 
   const editorRef = React.useRef<editor.IStandaloneCodeEditor | null>(null);
+
+  loader.config({ paths: { vs: "/vs" } });
 
   const handleEditorDidMount = (
     editor: editor.IStandaloneCodeEditor,
