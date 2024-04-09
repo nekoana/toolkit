@@ -1,29 +1,27 @@
 "use client";
 
 import { MdOutlinedTextField } from "@/wrapper/text-field";
-import { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { editor } from "monaco-editor";
-import Editor, { Monaco, loader } from "@monaco-editor/react";
-import React from "react";
-import clsx from "clsx";
-import { MdFilledIconButton } from "@/wrapper/icon-button";
+import Editor, { loader, Monaco } from "@monaco-editor/react";
+import { MdFilledIconButton, MdIconButton } from "@/wrapper/icon-button";
 import { MdIcon } from "@/wrapper/icon";
 import Image from "next/image";
 import { functionTemplate } from "./function-template";
+import { MdDialog } from "@/wrapper/labs/dialog";
 
-export default function BytesAnalysis() {
-  const [hexContent, setHexContent] = useState<string>("");
-
-  const editorRef = React.useRef<editor.IStandaloneCodeEditor | null>(null);
-
+function AnalysisJsEditor({
+  onEditorDidMount,
+}: {
+  // eslint-disable-next-line no-unused-vars
+  readonly onEditorDidMount: (editor: editor.IStandaloneCodeEditor) => void;
+}) {
   loader.config({ paths: { vs: "/vs" } });
 
   const handleEditorDidMount = (
     editor: editor.IStandaloneCodeEditor,
     monaco: Monaco,
   ) => {
-    editorRef.current = editor;
-
     monaco.editor.defineTheme("BytesAnalysisTheme", {
       base: "vs",
       inherit: true,
@@ -34,40 +32,117 @@ export default function BytesAnalysis() {
     });
 
     monaco.editor.setTheme("BytesAnalysisTheme");
+
+    onEditorDidMount(editor);
   };
 
-  const handleRun = async () => {
+  return (
+    <div className="w-full h-[58vh] overflow-hidden py-2 transition shadow-[0px_0px_0px_1px_rgb(121,89,26)] hover:shadow-[0px_0px_0px_3px_rgb(121,89,26)] rounded">
+      <Editor
+        onMount={handleEditorDidMount}
+        defaultLanguage="javascript"
+        defaultValue={functionTemplate}
+      />
+    </div>
+  );
+}
+
+function AnalysisFeedback({
+  analyzeFun,
+  analyzeHex,
+  showFeedback,
+  onCloseFeedback,
+}: {
+  // eslint-disable-next-line no-unused-vars
+  analyzeFun?: (data: Blob) => Promise<string[]>;
+  analyzeHex: string;
+  showFeedback: boolean;
+  onCloseFeedback: () => void;
+}) {
+  const [feedback, setFeedback] = useState<string[]>([]);
+
+  const handleFeedbackClose = () => {
+    onCloseFeedback();
+  };
+
+  const handleAnalyze = async () => {
     try {
-      // Parse content as function
-      const functionCode = editorRef.current?.getValue() || "";
-      const parsedFunction = eval(`(${functionCode})`);
+      // eslint-disable-next-line no-unused-vars
+      const analyze = analyzeFun;
 
-      // Create a Blob from the hex content
-      const hexString = hexContent.replace(/\s/g, "");
+      if (!analyze) {
+        throw new Error("Invalid analyze function");
+      }
 
-      if (hexString.length % 2 !== 0) {
+      const hex = analyzeHex.replace(/\s/g, "");
+
+      if (hex.length % 2 !== 0) {
         throw new Error(
           "Invalid hex content length, must be even number of characters",
         );
       }
 
-      const hexArray = hexString.match(/.{1,2}/g);
-      if (hexArray === null) {
+      const array = hex.match(/.{1,2}/g);
+      if (array === null) {
         throw new Error(
           "Invalid hex contentm, only contains whitespace or no content",
         );
       }
 
-      const byteArray = new Uint8Array(hexArray.map((x) => parseInt(x, 16)));
+      const bs = new Uint8Array(array.map((x) => parseInt(x, 16)));
 
-      const data = new Blob([byteArray], { type: "application/octet-stream" });
+      const data = new Blob([bs], { type: "application/octet-stream" });
 
-      const result = await parsedFunction(data);
+      const result = await analyze(data);
       // Log the result
-      console.log("Result:", result);
+      setFeedback(result);
     } catch (error) {
-      console.error("Failed to run analyze function:", error);
+      const e = error as Error;
+      setFeedback(["Failed to analyze hex content:", e.message]);
     }
+  };
+
+  useEffect(() => {
+    handleAnalyze();
+  }, [analyzeFun, analyzeHex]);
+
+  return (
+    <MdDialog open={showFeedback} onClose={handleFeedbackClose}>
+      <span slot="headline">
+        <span className="flex-1">Dialog Title</span>
+        <MdIconButton value="close" type="submit" onClick={handleFeedbackClose}>
+          <MdIcon>
+            <Image src="/close.svg" width={24} height={24} alt="Close" />
+          </MdIcon>
+        </MdIconButton>
+      </span>
+      <form slot="content" method="dialog">
+        {feedback && feedback.map((line, index) => <p key={index}>{line}</p>)}
+      </form>
+    </MdDialog>
+  );
+}
+
+export default function BytesAnalysis() {
+  const [analyzeHex, setAnalyzeHex] = useState<string>("");
+  const [showDialog, setShowDialog] = useState(false);
+  const [analyzeCode, setAnalyzeCode] = useState<string>("");
+
+  const analyzeFun = useMemo(() => {
+    try {
+      // eslint-disable-next-line no-unused-vars
+      return eval(`(${analyzeCode})`) as (data: Blob) => Promise<string[]>;
+    } catch (error) {
+      null;
+    }
+  }, [analyzeCode]);
+
+  const editorRef = React.useRef<editor.IStandaloneCodeEditor>();
+
+  const handleRunAnalyze = () => {
+    setAnalyzeCode(editorRef.current?.getValue() ?? "");
+
+    setShowDialog(true);
   };
 
   return (
@@ -79,31 +154,18 @@ export default function BytesAnalysis() {
         onInput={(e) => {
           const target = e.target as HTMLInputElement;
 
-          setHexContent(target.value);
+          setAnalyzeHex(target.value);
         }}
-        value={hexContent}
-      ></MdOutlinedTextField>
+        value={analyzeHex}
+      />
 
-      <div
-        className={clsx(
-          "w-full",
-          "h-[58vh]",
-          "overflow-hidden",
-          "py-2",
-          "transition",
-          "shadow-[0px_0px_0px_1px_rgb(121,89,26)]", //7f5700
-          "hover:shadow-[0px_0px_0px_3px_rgb(121,89,26)]",
-          "rounded-md",
-        )}
-      >
-        <Editor
-          onMount={handleEditorDidMount}
-          defaultLanguage="javascript"
-          defaultValue={functionTemplate}
-        />
-      </div>
+      <AnalysisJsEditor
+        onEditorDidMount={(editor) => {
+          editorRef.current = editor;
+        }}
+      />
 
-      <MdFilledIconButton className="w-24 h-12" onClick={handleRun}>
+      <MdFilledIconButton className="w-24 h-12" onClick={handleRunAnalyze}>
         <MdIcon>
           <Image
             src="/play-arrow.svg"
@@ -113,6 +175,13 @@ export default function BytesAnalysis() {
           />
         </MdIcon>
       </MdFilledIconButton>
+
+      <AnalysisFeedback
+        analyzeFun={analyzeFun}
+        analyzeHex={analyzeHex}
+        showFeedback={showDialog}
+        onCloseFeedback={() => setShowDialog(false)}
+      />
     </div>
   );
 }
