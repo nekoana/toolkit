@@ -2,7 +2,7 @@ export const functionTemplate = `
 /**
  *
  * @param {Blob} data
- * @returns {[{name:string,value:string,description:string}]}
+ * @returns {[string]}
  */
 async function analyze(data) {
     // Your code here
