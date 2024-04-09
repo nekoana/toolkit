@@ -62,7 +62,7 @@ export default function BytesAnalysis() {
 
       const data = new Blob([byteArray], { type: "application/octet-stream" });
 
-      const result = parsedFunction(data);
+      const result = await parsedFunction(data);
       // Log the result
       console.log("Result:", result);
     } catch (error) {
