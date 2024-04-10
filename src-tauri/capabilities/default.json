@@ -19,6 +19,9 @@
     "window:allow-minimize",
     "window:allow-maximize",
     "window:allow-is-fullscreen",
-    "window:allow-set-fullscreen"
+    "window:allow-set-fullscreen",
+    "global-shortcut:allow-is-registered",
+    "global-shortcut:allow-register",
+    "global-shortcut:allow-unregister"
   ]
 }
