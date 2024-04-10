@@ -48,12 +48,13 @@ export default function BytesAnalysis() {
       />
 
       <AnalysisJsEditor
+        className="flex-1"
         onEditorDidMount={(editor) => {
           editorRef.current = editor;
         }}
       />
 
-      <MdFilledIconButton className="w-24 h-12" onClick={handleRunAnalyze}>
+      <MdFilledIconButton className="w-24 h-12 my-4" onClick={handleRunAnalyze}>
         <MdIcon>
           <Image
             src="/play-arrow.svg"

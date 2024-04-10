@@ -6,12 +6,15 @@ import Editor, { loader, Monaco } from "@monaco-editor/react";
 import { functionTemplate } from "./function-template";
 import { register, unregister } from "@tauri-apps/plugin-global-shortcut";
 import { jetBrains } from "../../localfonts";
+import clsx from "clsx";
 
 export default function AnalysisJsEditor({
   onEditorDidMount,
+  className,
 }: {
   // eslint-disable-next-line no-unused-vars
   readonly onEditorDidMount: (editor: editor.IStandaloneCodeEditor) => void;
+  readonly className?: string | undefined;
 }) {
   loader.config({ paths: { vs: "/vs" } });
 
@@ -74,7 +77,19 @@ export default function AnalysisJsEditor({
   });
 
   return (
-    <div className="w-full h-[58vh] overflow-hidden py-2 transition shadow-[0px_0px_0px_1px_rgb(121,89,26)] hover:shadow-[0px_0px_0px_3px_rgb(121,89,26)] rounded">
+    <div
+      className={clsx(
+        "w-full",
+        "h-[58vh]",
+        "overflow-hidden",
+        "py-2",
+        "transition",
+        "shadow-[0px_0px_0px_1px_rgb(121,89,26)]",
+        "hover:shadow-[0px_0px_0px_3px_rgb(121,89,26)]",
+        "rounded",
+        className,
+      )}
+    >
       <Editor
         onMount={handleEditorDidMount}
         defaultLanguage="javascript"
