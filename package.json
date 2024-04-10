@@ -17,6 +17,7 @@
   "dependencies": {
     "@material/web": "^1.4.0",
     "@monaco-editor/react": "^4.6.0",
+    "@next/font": "^14.1.4",
     "@tauri-apps/api": "^2.0.0-beta",
     "@tauri-apps/plugin-global-shortcut": "^2.0.0-beta",
     "@tauri-apps/plugin-os": "^2.0.0-beta",

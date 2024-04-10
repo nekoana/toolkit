@@ -10,6 +10,7 @@ import Image from "next/image";
 import { functionTemplate } from "./function-template";
 import { MdDialog } from "@/wrapper/labs/dialog";
 import { register, unregister } from "@tauri-apps/plugin-global-shortcut";
+import { jetBrains } from "../localfonts";
 
 function AnalysisJsEditor({
   onEditorDidMount,
@@ -43,6 +44,17 @@ function AnalysisJsEditor({
         onMount={handleEditorDidMount}
         defaultLanguage="javascript"
         defaultValue={functionTemplate}
+        options={{
+          minimap: { enabled: false },
+          lineNumbers: "on",
+          wordWrap: "on",
+          scrollBeyondLastLine: false,
+          automaticLayout: true,
+          fontSize: 14,
+          fontFamily: jetBrains.style.fontFamily,
+          scrollbar: { vertical: "hidden", horizontal: "hidden" },
+          contextmenu: false,
+        }}
       />
     </div>
   );
@@ -86,7 +98,7 @@ function AnalysisFeedback({
       const array = hex.match(/.{1,2}/g);
       if (array === null) {
         throw new Error(
-          "Invalid hex contentm, only contains whitespace or no content",
+          "Invalid hex content, only contains whitespace or hex characters",
         );
       }
 
@@ -110,18 +122,24 @@ function AnalysisFeedback({
   }, [analyzeFun, analyzeHex]);
 
   return (
-    <MdDialog open={showFeedback} onClose={handleFeedbackClose}>
+    <MdDialog
+      className="w-[80%] h-[80%]"
+      open={showFeedback}
+      onClose={handleFeedbackClose}
+    >
       <span slot="headline">
-        <span className="flex-1">Dialog Title</span>
+        <span className="flex-1">Feedback</span>
         <MdIconButton value="close" type="submit" onClick={handleFeedbackClose}>
           <MdIcon>
             <Image src="/close.svg" width={24} height={24} alt="Close" />
           </MdIcon>
         </MdIconButton>
       </span>
-      <form slot="content" method="dialog">
-        {feedback && feedback.map((line, index) => <p key={index}>{line}</p>)}
-      </form>
+      <div slot="content" className="flex flex-col items-center">
+        <div>
+          {feedback && feedback.map((line, index) => <p key={index}>{line}</p>)}
+        </div>
+      </div>
     </MdDialog>
   );
 }
