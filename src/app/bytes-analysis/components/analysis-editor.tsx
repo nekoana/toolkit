@@ -7,6 +7,7 @@ import { functionTemplate } from "./function-template";
 import { register, unregister } from "@tauri-apps/plugin-global-shortcut";
 import { jetBrains } from "../../localfonts";
 import clsx from "clsx";
+import { getCurrent } from "@tauri-apps/api/window";
 
 export default function AnalysisJsEditor({
   onEditorDidMount,
@@ -37,44 +38,60 @@ export default function AnalysisJsEditor({
 
     editorRef.current = editor;
 
+    editor.onDidBlurEditorWidget(() => {
+      unregisterShortcuts();
+    });
+
+    editor.onDidFocusEditorWidget(() => {
+      registerShortcuts();
+    });
+
     onEditorDidMount(editor);
   };
 
-  useEffect(() => {
-    //set shortcut to select all text
-    register("CmdOrCtrl+A", () => {
-      const editor = editorRef.current;
-      if (editor) {
-        const range = editor.getModel()?.getFullModelRange();
-        if (range) {
-          editor.setSelection(range);
-        }
+  const CmdOrCtrl_A = () => {
+    const editor = editorRef.current;
+    if (editor) {
+      const range = editor.getModel()?.getFullModelRange();
+      if (range) {
+        editor.setSelection(range);
       }
-    });
+    }
+  };
+
+  const CmdOrCtrl_Z = () => {
+    editorRef.current?.trigger("undo", "undo", null);
+  };
+
+  const CmdOrCtrl_Y = () => {
+    editorRef.current?.trigger("redo", "redo", null);
+  };
+
+  const CmdOrCtrl_D = () => {
+    editorRef.current?.trigger("deleteRight", "deleteRight", null);
+  };
+
+  const registerShortcuts = async () => {
+    await unregisterShortcuts();
+    //set shortcut to select all text
+    await register("CmdOrCtrl+A", CmdOrCtrl_A);
 
     //set shortcut to undo
-    register("CmdOrCtrl+Z", () => {
-      editorRef.current?.trigger("undo", "undo", null);
-    });
+    await register("CmdOrCtrl+Z", CmdOrCtrl_Z);
 
     //set shortcut to redo
-    register("CmdOrCtrl+Y", () => {
-      editorRef.current?.trigger("redo", "redo", null);
-    });
+    await register("CmdOrCtrl+Y", CmdOrCtrl_Y);
 
     //set shortcut to delete
-    register("CmdOrCtrl+D", () => {
-      editorRef.current?.trigger("deleteRight", "deleteRight", null);
-    });
+    await register("CmdOrCtrl+D", CmdOrCtrl_D);
+  };
 
-    // Unregister the shortcut when the component is unmounted
-    return () => {
-      unregister("CmdOrCtrl+A");
-      unregister("CmdOrCtrl+Z");
-      unregister("CmdOrCtrl+Y");
-      unregister("CmdOrCtrl+D");
-    };
-  });
+  const unregisterShortcuts = async () => {
+    await unregister("CmdOrCtrl+A");
+    await unregister("CmdOrCtrl+Z");
+    await unregister("CmdOrCtrl+Y");
+    await unregister("CmdOrCtrl+D");
+  };
 
   return (
     <div
@@ -96,13 +113,8 @@ export default function AnalysisJsEditor({
         defaultValue={functionTemplate}
         options={{
           minimap: { enabled: false },
-          lineNumbers: "on",
-          wordWrap: "on",
-          scrollBeyondLastLine: false,
-          automaticLayout: true,
           fontSize: 14,
           fontFamily: jetBrains.style.fontFamily,
-          scrollbar: { vertical: "hidden", horizontal: "hidden" },
           contextmenu: false,
         }}
       />
