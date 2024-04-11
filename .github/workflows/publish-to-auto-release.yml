@@ -1,0 +1,47 @@
+name: "publish"
+
+on:
+  push:
+    branches:
+      - v-* # This will trigger the action on any branch that starts with `v-`
+
+# This is the example from the readme.
+# On each push to the `release` branch it will create or update a GitHub release, build your app, and upload the artifacts to the release.
+
+jobs:
+  publish-tauri:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos-latest, windows-latest]
+
+    runs-on: ${{ matrix.platform }}
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 21
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: install frontend dependencies
+        run: npm install # change this to npm or pnpm depending on which one you use
+
+      - uses: tauri-apps/tauri-action@dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        with:
+          tagName: ADBTools-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
+          releaseName: "ADBTools v__VERSION__"
+          releaseId: ${{ github.event.release.id }}
+          releaseBody: "Release notes: TODO!"
+          releaseDraft: false
+          prerelease: false
