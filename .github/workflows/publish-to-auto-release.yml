@@ -43,5 +43,5 @@ jobs:
           releaseName: "Toolkit v__VERSION__"
           releaseId: ${{ github.event.release.id }}
           releaseBody: "Release notes: TODO!"
-          releaseDraft: false
+          releaseDraft: true
           prerelease: false
