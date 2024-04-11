@@ -5,6 +5,7 @@ import { MdIconButton } from "@/wrapper/icon-button";
 import { MdIcon } from "@/wrapper/icon";
 import Image from "next/image";
 import { MdDialog } from "@/wrapper/labs/dialog";
+import { FeedbackDefail } from "./feedback-detail";
 
 export default function AnalysisFeedback({
   analyzeFun,
@@ -59,7 +60,11 @@ export default function AnalysisFeedback({
       setFeedback(result);
     } catch (error) {
       const e = error as Error;
-      setFeedback(["Failed to analyze hex content:", e.message]);
+      setFeedback([
+        "<p>Failed to analyze hex content: <strong>" +
+          e.message +
+          "</strong></p>",
+      ]);
     }
   };
 
@@ -81,10 +86,11 @@ export default function AnalysisFeedback({
           </MdIcon>
         </MdIconButton>
       </span>
-      <div slot="content" className="flex flex-col items-center">
-        <div>
-          {feedback && feedback.map((line, index) => <p key={index}>{line}</p>)}
-        </div>
+      <div slot="content" className="flex flex-col items-center gap-y-[8px]">
+        {feedback &&
+          feedback.map((line, index) => (
+            <FeedbackDefail key={index} detail={line} className="w-full" />
+          ))}
       </div>
     </MdDialog>
   );
