@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { editor } from "monaco-editor";
 import Editor, { loader, Monaco } from "@monaco-editor/react";
 import { functionTemplate } from "./function-template";
 import { register, unregister } from "@tauri-apps/plugin-global-shortcut";
 import { jetBrains } from "../../localfonts";
 import clsx from "clsx";
-import { getCurrent } from "@tauri-apps/api/window";
 
 export default function AnalysisJsEditor({
   onEditorDidMount,
@@ -116,6 +115,9 @@ export default function AnalysisJsEditor({
           fontSize: 14,
           fontFamily: jetBrains.style.fontFamily,
           contextmenu: false,
+          stickyScroll: {
+            enabled: false,
+          },
         }}
       />
     </div>
