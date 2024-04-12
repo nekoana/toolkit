@@ -20,6 +20,45 @@ export default function AnalysisJsEditor({
 
   const editorRef = React.useRef<editor.IStandaloneCodeEditor>();
 
+  // eslint-disable-next-line no-unused-vars
+  function debounce(func: (...args: any[]) => void, wait: number) {
+    let timeout: NodeJS.Timeout;
+    return (...args: any[]) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), wait);
+    };
+  }
+
+  const handleRemoteScriptUrl = debounce((uri: string) => {
+    console.log("Fetching remote script", uri);
+    fetch(uri).then((response) => {
+      console.log("Response", response);
+      if (response.ok) {
+        response.text().then((text) => {
+          editorRef.current?.setValue(text);
+        });
+      } else {
+        console.error("Failed to fetch remote script", response.statusText);
+      }
+    });
+  }, 500);
+
+  const handleCursorPositionChange = debounce(
+    (e: editor.ICursorPositionChangedEvent) => {
+      if (e.position.lineNumber === 1) {
+        const model = editorRef.current?.getModel();
+        if (model) {
+          const firstLine = model.getLineContent(1);
+          const match = firstLine.match(/\/\/@remote:(.+)/);
+          if (match) {
+            handleRemoteScriptUrl(match[1]);
+          }
+        }
+      }
+    },
+    500,
+  ); // Wait for 500ms before executing the function
+
   const handleEditorDidMount = (
     editor: editor.IStandaloneCodeEditor,
     monaco: Monaco,
@@ -44,6 +83,8 @@ export default function AnalysisJsEditor({
     editor.onDidFocusEditorWidget(() => {
       registerShortcuts();
     });
+
+    editor.onDidChangeCursorPosition(handleCursorPositionChange);
 
     onEditorDidMount(editor);
   };
