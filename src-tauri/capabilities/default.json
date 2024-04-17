@@ -25,6 +25,8 @@
     "global-shortcut:allow-is-registered",
     "global-shortcut:allow-register",
     "global-shortcut:allow-unregister",
+    "static-file-server:allow-listen",
+    "static-file-server:allow-close",
     {
       "identifier": "http:allow-fetch",
       "allow": [

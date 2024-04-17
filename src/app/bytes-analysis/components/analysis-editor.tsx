@@ -77,11 +77,11 @@ export default function AnalysisJsEditor({
     editorRef.current = editor;
 
     editor.onDidBlurEditorWidget(() => {
-      unregisterShortcuts();
+      unregisterShortcuts().then((r) => console.log("Shortcuts unregistered"));
     });
 
     editor.onDidFocusEditorWidget(() => {
-      registerShortcuts();
+      registerShortcuts().then((r) => console.log("Shortcuts registered"));
     });
 
     editor.onDidChangeCursorPosition(handleCursorPositionChange);

@@ -30,7 +30,8 @@
     "framer-motion": "^11.0.24",
     "next": "^14.0.0",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "tauri-plugin-static-file-server-api": "file:./plugins/static-file-server"
   },
   "devDependencies": {
     "@lit/react": "^1.0.4",

@@ -22,6 +22,7 @@ serde_json = "^1.0"
 serde = { version = "^1.0", features = ["derive"] }
 tauri = { version = "^2.0.0-beta", features = ["macos-private-api"] }
 tauri-plugin-http = "^2.0.0-beta"
+tauri-plugin-static-file-server = {path = "../plugins/static-file-server" }
 
 [features]
 # this feature is used for production builds or when `devUrl` points to the filesystem

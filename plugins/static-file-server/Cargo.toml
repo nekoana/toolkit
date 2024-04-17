@@ -1,0 +1,22 @@
+[package]
+name = "tauri-plugin-static-file-server"
+version = "0.0.0"
+authors = [ "You" ]
+description = ""
+edition = "2021"
+rust-version = "1.70"
+exclude = ["/examples", "/webview-dist", "/webview-src", "/node_modules"]
+links = "tauri-plugin-static-file-server"
+
+[dependencies]
+tauri = { version = "^2.0.0-beta" }
+serde = "1.0"
+thiserror = "1.0"
+axum = { version = "0.7.5", features = ["tokio", "tracing", "tower-log"] }
+tokio = { version = "1.37.0", features = ["macros","fs","net","tracing"] }
+tower-http = { version = "0.5.2", features = ["fs", "trace"] }
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
+
+[build-dependencies]
+tauri-plugin = { version = "^2.0.0-beta", features = ["build"] }
