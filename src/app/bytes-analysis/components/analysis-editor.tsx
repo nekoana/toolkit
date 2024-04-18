@@ -6,6 +6,7 @@ import Editor, { loader, Monaco } from "@monaco-editor/react";
 import { functionTemplate } from "./function-template";
 import { register, unregister } from "@tauri-apps/plugin-global-shortcut";
 import { jetBrains } from "../../localfonts";
+import { fetch } from "@tauri-apps/plugin-http";
 import clsx from "clsx";
 
 export default function AnalysisJsEditor({
