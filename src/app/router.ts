@@ -15,7 +15,7 @@ const router: Router[] = [
     title: "Static File Server",
     icon: "/static-file-server.svg",
     path: "/static-file-server",
-  }
+  },
 ];
 
 export default router;
