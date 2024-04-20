@@ -32,17 +32,24 @@ export default function AnalysisJsEditor({
 
   const handleRemoteScriptUrl = debounce((uri: string) => {
     console.log("Fetching remote script", uri);
-    fetch(uri).then((response) => {
-      console.log("Response", response);
-      if (response.ok) {
-        response.text().then((text) => {
-          editorRef.current?.setValue(text);
-        });
-      } else {
-        console.error("Failed to fetch remote script", response.statusText);
-      }
-    });
-  }, 500);
+    fetch(uri)
+      .then((response) => {
+        if (response.ok) {
+          response.text().then((text) => {
+            editorRef.current?.setValue(text);
+          });
+        } else {
+          editorRef.current?.setValue(
+            `// Failed to fetch remote script, ${response.status}: ${uri}, ${response.statusText}`,
+          );
+        }
+      })
+      .catch((error) => {
+        editorRef.current?.setValue(
+          `// Failed to fetch remote script: ${uri}, ${error}`,
+        );
+      });
+  }, 1000 * 2);
 
   const handleCursorPositionChange = debounce(
     (e: editor.ICursorPositionChangedEvent) => {
@@ -78,11 +85,11 @@ export default function AnalysisJsEditor({
     editorRef.current = editor;
 
     editor.onDidBlurEditorWidget(() => {
-      unregisterShortcuts().then((r) => console.log("Shortcuts unregistered"));
+      unregisterShortcuts().then(() => console.log("Shortcuts unregistered"));
     });
 
     editor.onDidFocusEditorWidget(() => {
-      registerShortcuts().then((r) => console.log("Shortcuts registered"));
+      registerShortcuts().then(() => console.log("Shortcuts registered"));
     });
 
     editor.onDidChangeCursorPosition(handleCursorPositionChange);
