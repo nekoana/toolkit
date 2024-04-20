@@ -8,10 +8,7 @@ import FilledCard from "@/components/card";
 
 function Bit({ bit, index }: { bit: string; index: number }) {
   return (
-    <FilledCard
-      className="w-auto h-auto m-[12px] font-bold"
-      disabled={bit === "0"}
-    >
+    <FilledCard className="font-bold w-full h-max" disabled={bit === "0"}>
       {index}
     </FilledCard>
   );
@@ -32,10 +29,10 @@ export default function Bitset() {
   }, [content, format]);
 
   return (
-    <div className="container p-12 h-screen overflow-y-scroll flex flex-col content-center items-center">
+    <div className="w-full h-full flex flex-col">
       <MdOutlinedTextField
         label="Content"
-        className="w-full h-16"
+        className="w-full h-16 my-2"
         id="content"
         value={content}
         onInput={(e) => {
@@ -65,7 +62,7 @@ export default function Bitset() {
         </MdFilledSelect>
       </MdOutlinedTextField>
 
-      <div className="p-16 grid grid-cols-8 justify-center content-center items-center">
+      <div className="w-full grid grid-cols-8 max-h-96 overflow-y-scroll gap-[16px]">
         {bits.split("").map((bit, index) => (
           <Bit key={index} bit={bit} index={index + 1} />
         ))}

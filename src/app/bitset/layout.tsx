@@ -1,5 +1,5 @@
 import React from "react";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return <div className="w-full h-full">{children}</div>;
 }

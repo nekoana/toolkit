@@ -34,7 +34,7 @@ export default function BytesAnalysis() {
   };
 
   return (
-    <div className="container p-12 h-screen overflow-y-scroll flex flex-col content-center items-center gap-y-[16px]">
+    <div className="h-full w-full flex flex-col content-center items-center gap-y-[16px] px-2">
       <MdOutlinedTextField
         label="Hex Content"
         className="w-full h-16"
@@ -54,7 +54,7 @@ export default function BytesAnalysis() {
         }}
       />
 
-      <MdFilledIconButton className="w-24 h-12 my-4" onClick={handleRunAnalyze}>
+      <MdFilledIconButton className="w-24 h-12" onClick={handleRunAnalyze}>
         <MdIcon>
           <Image
             src="/play-arrow.svg"

@@ -145,9 +145,8 @@ export default function AnalysisJsEditor({
     <div
       className={clsx(
         "w-full",
-        "h-[58vh]",
         "overflow-hidden",
-        "py-2",
+        "relative",
         "transition",
         "shadow-[0px_0px_0px_1px_rgb(121,89,26)]",
         "hover:shadow-[0px_0px_0px_3px_rgb(121,89,26)]",
@@ -156,12 +155,14 @@ export default function AnalysisJsEditor({
       )}
     >
       <Editor
+        className="w-full h-full absolute top-0 left-0"
         onMount={handleEditorDidMount}
         defaultLanguage="javascript"
         defaultValue={functionTemplate}
         options={{
           minimap: { enabled: false },
           fontSize: 14,
+          automaticLayout: true,
           fontFamily: jetBrains.style.fontFamily,
           contextmenu: false,
           stickyScroll: {
