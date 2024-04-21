@@ -149,7 +149,6 @@ function StaticFileServer() {
   };
 
   useEffect(() => {
-    console.log("state", state);
     if (runServer) {
       //start server
       startServer().catch((e) => {
@@ -171,9 +170,19 @@ function StaticFileServer() {
     };
   }, [runServer]);
 
+  const [logs, setLogs] = useState<string[]>([]);
+
   useEffect(() => {
     const listener = listen("static-file-server://logcat", (event) => {
       console.log(event.payload);
+
+      const newLog = [...logs, event.payload] as string[];
+
+      if (newLog.length > 100) {
+        newLog.shift();
+      }
+
+      setLogs(newLog);
     });
 
     return () => {
@@ -201,6 +210,7 @@ function StaticFileServer() {
         />
 
         <MdSwitch
+          disabled={!state.file || !state.port}
           selected={runServer}
           onInput={() => {
             setRunServer(!runServer);
@@ -209,7 +219,12 @@ function StaticFileServer() {
       </div>
       <MdDivider className="w-full" />
 
-      <MdOutlinedCard className="flex-1" />
+      <MdOutlinedTextField
+        className="flex-1 p-4 whitespace-pre-line"
+        readOnly
+        value={logs.join("\n>>>>-_-<<<<\n")}
+        type="textarea"
+      />
     </div>
   );
 }
