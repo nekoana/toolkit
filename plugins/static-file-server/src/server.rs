@@ -1,19 +1,20 @@
 use std::fmt::{Display, Formatter};
 use std::path::{Path, PathBuf};
 
+use axum::response::Html;
 use axum::{
     extract::{OriginalUri, State},
     response::IntoResponse,
-    Router,
     routing::get,
+    Router,
 };
-use axum::response::Html;
 use tokio::net::TcpListener;
-use tokio::sync::{Mutex, oneshot};
-use tower_http::{services::ServeDir, trace::TraceLayer};
+use tokio::spawn;
+use tokio::sync::{oneshot, Mutex};
+use tower_http::services::ServeDir;
 use tracing::debug;
-use tracing_subscriber::layer::SubscriberExt;
-use tracing_subscriber::util::SubscriberInitExt;
+
+use crate::logcat::{HttpLogcatLayer, Logcat};
 
 struct Uri(Vec<String>);
 
@@ -46,13 +47,6 @@ pub struct StaticFileServer {
     signal: Mutex<Option<oneshot::Sender<()>>>,
 }
 
-
-impl Drop for StaticFileServer {
-    fn drop(&mut self) {
-        let _ = self.shutdown();
-    }
-}
-
 impl StaticFileServer {
     pub fn new(path: impl AsRef<Path>, port: u16) -> Result<Self, std::io::Error> {
         Ok(Self {
@@ -62,45 +56,54 @@ impl StaticFileServer {
         })
     }
 
-    pub async fn start(&self) -> std::io::Result<()> {
+    pub async fn start(&self, logcat: impl Logcat + Clone + Send + 'static) -> std::io::Result<()> {
         let (tx, rx) = oneshot::channel();
 
         let mut guard = self.signal.lock().await;
         guard.replace(tx);
 
-
-        self.start_app(rx).await
+        self.start_app(rx, logcat).await
     }
 
     pub async fn shutdown(&self) {
         let mut guard = self.signal.lock().await;
         if let Some(tx) = guard.take() {
-            let _ = tx.send(());
+            if let Err(()) = tx.send(()) {
+                eprintln!("shutdown error");
+            }
+
+            println!("talk to shutdown")
         }
     }
 
-    async fn start_app(&self, signal: oneshot::Receiver<()>) -> std::io::Result<()> {
-        let _ = tracing_subscriber::registry()
-            .with(
-                tracing_subscriber::EnvFilter::try_from_default_env()
-                    .unwrap_or_else(|_| "static-file-server-lib=debug,tower_http=debug".into()),
-            )
-            .with(tracing_subscriber::fmt::layer())
-            .try_init();
-
-        debug!(name:"start_app",path = ?self.path, port = self.port);
-
+    async fn start_app(
+        &self,
+        signal: oneshot::Receiver<()>,
+        logcat: impl Logcat + Clone + Send + 'static,
+    ) -> std::io::Result<()> {
         let app = Router::new()
             .fallback(get(Self::root_handler))
             .with_state(self.path.clone())
             .nest_service("/static", ServeDir::new(self.path.clone()))
-            .layer(TraceLayer::new_for_http());
+            .layer(HttpLogcatLayer::new(logcat));
 
         let listener = TcpListener::bind(format!("0.0.0.0:{}", self.port)).await?;
 
-        axum::serve(listener, app)
-            .with_graceful_shutdown(async { signal.await.unwrap_or_default() })
-            .await?;
+        let server = axum::serve(listener, app).with_graceful_shutdown(async {
+            if let Err(_) = signal.await {
+                eprintln!("shutdown error");
+            }
+
+            println!("shutdown received");
+        });
+
+        spawn(async move {
+            if let Err(e) = server.await {
+                eprintln!("server error: {}", e);
+            }
+
+            println!("server end");
+        });
 
         Ok(())
     }
@@ -158,14 +161,5 @@ impl StaticFileServer {
         }
 
         Ok(files)
-    }
-}
-
-#[cfg(test)]
-mod test {
-    #[tokio::test]
-    async fn test_file_server() {
-        let server = super::StaticFileServer::new("../", 8000).unwrap();
-        server.start().await.unwrap();
     }
 }

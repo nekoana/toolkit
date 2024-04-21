@@ -25,8 +25,13 @@
     "global-shortcut:allow-is-registered",
     "global-shortcut:allow-register",
     "global-shortcut:allow-unregister",
-    "static-file-server:allow-listen",
+    "static-file-server:allow-start",
     "static-file-server:allow-close",
+    "dialog:allow-ask",
+    "dialog:allow-confirm",
+    "dialog:allow-message",
+    "dialog:allow-open",
+    "dialog:allow-save",
     {
       "identifier": "http:allow-fetch",
       "allow": [

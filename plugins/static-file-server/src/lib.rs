@@ -1,17 +1,18 @@
-use std::{collections::HashMap};
+use std::collections::HashMap;
 
-use tauri::{
-    Manager,
-    plugin::{Builder, TauriPlugin}, Runtime,
-};
 use tauri::async_runtime::Mutex;
+use tauri::{
+    plugin::{Builder, TauriPlugin},
+    Manager, Runtime,
+};
 
-pub use error::{Error, Result};
 use crate::server::StaticFileServer;
+pub use error::{Error, Result};
 
 mod commands;
-mod server;
 mod error;
+mod server;
+mod logcat;
 
 #[derive(Default)]
 struct StaticFileServerState(Mutex<HashMap<String, StaticFileServer>>);
@@ -19,7 +20,7 @@ struct StaticFileServerState(Mutex<HashMap<String, StaticFileServer>>);
 /// Initializes the plugin.
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
     Builder::new("static-file-server")
-        .invoke_handler(tauri::generate_handler![commands::listen])
+        .invoke_handler(tauri::generate_handler![commands::start,commands::close])
         .setup(|app, _api| {
             // manage state so it is accessible by the commands
             app.manage(StaticFileServerState::default());

@@ -1,17 +1,22 @@
-use tauri::{AppHandle, command, Runtime, State, Window};
+use tauri::{command, AppHandle, Runtime, State, Window};
 
-use crate::{Result, StaticFileServerState};
+use crate::logcat::HttpLogcat;
 use crate::server::StaticFileServer;
+use crate::{Result, StaticFileServerState};
 
 #[command]
-pub(crate) async fn listen<R: Runtime>(
-    _app: AppHandle<R>,
+pub(crate) async fn start<R: Runtime>(
+    app: AppHandle<R>,
     _window: Window<R>,
     state: State<'_, StaticFileServerState>,
     path: String,
-    port: u16,
+    port: String,
 ) -> Result<()> {
+    let port = port.parse::<u16>().expect("Invalid port");
+
     let key = format!("{}:{}", path, port);
+
+    println!("Starting server: {}", key);
 
     // Check if the server is already running
     let mut servers = state.0.lock().await;
@@ -20,9 +25,11 @@ pub(crate) async fn listen<R: Runtime>(
         return Ok(());
     }
 
+    let logcat = HttpLogcat::new(app);
+
     let server = StaticFileServer::new(&path, port)?;
 
-    server.start().await?;
+    server.start(logcat).await?;
 
     servers.insert(key.clone(), server);
 
@@ -35,9 +42,13 @@ pub(crate) async fn close<R: Runtime>(
     _window: Window<R>,
     state: State<'_, StaticFileServerState>,
     path: String,
-    port: u16,
+    port: String,
 ) -> Result<()> {
+    let port = port.parse::<u16>().expect("Invalid port");
+
     let key = format!("{}:{}", path, port);
+
+    println!("Closing server: {}", key);
 
     let mut servers = state.0.lock().await;
 
