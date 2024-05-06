@@ -4,7 +4,7 @@ import FilledCard from "../components/card";
 import router from "./router";
 import clsx from "clsx"; // 导入router
 
-export type Router = {
+type Router = {
   title: string;
   path: string;
   icon: string;
@@ -44,11 +44,13 @@ export default function Menus({
 }) {
   return (
     <>
-      {
-        router.map((route: Router) => (
-          <Menu key={route.path} menu={route} className={menuClassName} />
-        )) // 使用router和Menu
-      }
+      {Object.entries(router).map(([path, { title, icon }]) => (
+        <Menu
+          key={path}
+          menu={{ title, path, icon }}
+          className={menuClassName}
+        />
+      ))}
     </>
   );
 }

@@ -5,6 +5,7 @@ import Image from "next/image";
 import React from "react";
 import { MdIcon } from "@/wrapper/icon";
 import { MdIconButton } from "@/wrapper/icon-button";
+import router from "@/app/router";
 
 export default function Breadcrumbs({
   className,
@@ -27,6 +28,7 @@ export default function Breadcrumbs({
         </li>
         {segments.map((segment, index) => {
           const path = `/${segments.slice(0, index + 1).join("/")}`;
+          const title = router[path]?.title || segment;
 
           return (
             <React.Fragment key={index}>
@@ -38,7 +40,7 @@ export default function Breadcrumbs({
                 className="mx-1"
               />
               <li className="rounded flex items-center relative px-2 py-0.5">
-                <Link href={path}>{segment}</Link>
+                <Link href={path}>{title}</Link>
               </li>
             </React.Fragment>
           );
