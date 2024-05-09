@@ -3,13 +3,13 @@
 import React from "react";
 import { editor } from "monaco-editor";
 import Editor, { loader, Monaco } from "@monaco-editor/react";
-import { functionTemplate } from "./function-template";
+import { functionTemplate } from "@/app/bytes-analysis/components/function-template";
 import { register, unregister } from "@tauri-apps/plugin-global-shortcut";
-import { jetBrains } from "../../localfonts";
+import { jetBrains } from "@/app/localfonts";
 import { fetch } from "@tauri-apps/plugin-http";
 import clsx from "clsx";
 
-export default function AnalysisJsEditor({
+export default function JsEditor({
   onEditorDidMount,
   className,
 }: {

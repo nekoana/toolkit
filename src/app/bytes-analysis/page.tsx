@@ -6,7 +6,7 @@ import { editor } from "monaco-editor";
 import { MdFilledIconButton } from "@/wrapper/icon-button";
 import { MdIcon } from "@/wrapper/icon";
 import Image from "next/image";
-import AnalysisJsEditor from "./components/analysis-editor";
+import JsEditor from "../../components/js-editor";
 import AnalysisFeedback from "./components/analysis-feedback";
 
 export default function BytesAnalysis() {
@@ -47,7 +47,7 @@ export default function BytesAnalysis() {
         value={analyzeHex}
       />
 
-      <AnalysisJsEditor
+      <JsEditor
         className="flex-1"
         onEditorDidMount={(editor) => {
           editorRef.current = editor;

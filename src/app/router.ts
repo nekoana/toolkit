@@ -11,6 +11,10 @@ const router: Record<string, { title: string; icon: string }> = {
     title: "Static File Server",
     icon: "/static-file-server.svg",
   },
+  "/tcp-server": {
+    title: "Tcp Server",
+    icon: "/tcp.svg",
+  },
 };
 
 export default router;

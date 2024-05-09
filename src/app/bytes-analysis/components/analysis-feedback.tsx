@@ -5,7 +5,7 @@ import { MdIconButton } from "@/wrapper/icon-button";
 import { MdIcon } from "@/wrapper/icon";
 import Image from "next/image";
 import { MdDialog } from "@/wrapper/labs/dialog";
-import { FeedbackDefail } from "./feedback-detail";
+import { FeedbackDetail } from "./feedback-detail";
 
 export default function AnalysisFeedback({
   analyzeFun,
@@ -89,7 +89,7 @@ export default function AnalysisFeedback({
       <div slot="content" className="flex flex-col items-center gap-y-[8px]">
         {feedback &&
           feedback.map((line, index) => (
-            <FeedbackDefail key={index} detail={line} className="w-full" />
+            <FeedbackDetail key={index} detail={line} className="w-full" />
           ))}
       </div>
     </MdDialog>
