@@ -3,7 +3,6 @@
 import React from "react";
 import { editor } from "monaco-editor";
 import Editor, { loader, Monaco } from "@monaco-editor/react";
-import { functionTemplate } from "@/app/bytes-analysis/components/function-template";
 import { register, unregister } from "@tauri-apps/plugin-global-shortcut";
 import { jetBrains } from "@/app/localfonts";
 import { fetch } from "@tauri-apps/plugin-http";
@@ -12,10 +11,12 @@ import clsx from "clsx";
 export default function JsEditor({
   onEditorDidMount,
   className,
+  functionTemplate,
 }: {
   // eslint-disable-next-line no-unused-vars
   readonly onEditorDidMount: (editor: editor.IStandaloneCodeEditor) => void;
   readonly className?: string | undefined;
+  readonly functionTemplate: string;
 }) {
   loader.config({ paths: { vs: "/vs" } });
 

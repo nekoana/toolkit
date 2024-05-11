@@ -8,6 +8,7 @@ import { MdIcon } from "@/wrapper/icon";
 import Image from "next/image";
 import JsEditor from "../../components/js-editor";
 import AnalysisFeedback from "./components/analysis-feedback";
+import { functionTemplate } from "@/app/bytes-analysis/components/function-template";
 
 export default function BytesAnalysis() {
   const [analyzeHex, setAnalyzeHex] = useState<string>("");
@@ -52,6 +53,7 @@ export default function BytesAnalysis() {
         onEditorDidMount={(editor) => {
           editorRef.current = editor;
         }}
+        functionTemplate={functionTemplate}
       />
 
       <MdFilledIconButton className="w-24 h-12" onClick={handleRunAnalyze}>
