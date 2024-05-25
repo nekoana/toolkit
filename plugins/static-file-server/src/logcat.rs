@@ -1,3 +1,5 @@
+use axum::body::Body;
+use axum::http::Request;
 use tauri::{AppHandle, Manager, Runtime};
 use tower::{Layer, Service};
 
@@ -50,11 +52,10 @@ where
 #[derive(Clone, Debug)]
 pub(crate) struct HttpLogcatService<S, L>(S, L);
 
-impl<S, L, Request> Service<Request> for HttpLogcatService<S, L>
+impl<S, L> Service<Request<Body>> for HttpLogcatService<S, L>
 where
-    S: Service<Request>,
+    S: Service<Request<Body>>,
     L: Logcat + Clone + Send + 'static,
-    Request: std::fmt::Debug,
 {
     type Response = S::Response;
     type Error = S::Error;
@@ -67,8 +68,8 @@ where
         self.0.poll_ready(cx)
     }
 
-    fn call(&mut self, req: Request) -> Self::Future {
-        self.1.log(format!("{:?}", req));
+    fn call(&mut self, req: Request<Body>) -> Self::Future {
+        self.1.log(format!("{:?}", req.headers()));
 
         self.0.call(req)
     }
