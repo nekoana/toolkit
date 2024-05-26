@@ -6,7 +6,6 @@ import { MdOutlinedTextField } from "@/wrapper/text-field";
 import { MdSwitch } from "@/wrapper/switch";
 import { useEffect, useReducer, useState } from "react";
 import { MdDivider } from "@/wrapper/divider";
-import { MdOutlinedCard } from "@/wrapper/labs/card";
 import { open } from "@tauri-apps/plugin-dialog";
 import { close, start } from "tauri-plugin-static-file-server-api";
 import { listen } from "@tauri-apps/api/event";

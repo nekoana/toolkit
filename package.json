@@ -16,7 +16,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@material/web": "^1.4.0",
+    "@material/web": "^1.5.0",
     "@monaco-editor/react": "^4.6.0",
     "@tauri-apps/api": "^2.0.0-beta",
     "@tauri-apps/plugin-dialog": "^2.0.0-beta",
@@ -32,7 +32,8 @@
     "next": "^14.0.0",
     "react": "^18",
     "react-dom": "^18",
-    "tauri-plugin-static-file-server-api": "file:./plugins/static-file-server"
+    "tauri-plugin-static-file-server-api": "file:./plugins/static-file-server",
+    "tauri-plugin-tcp-server-api": "file:./plugins/tcp-server"
   },
   "devDependencies": {
     "@lit/react": "^1.0.4",
